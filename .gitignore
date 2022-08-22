@@ -1,0 +1,6 @@
+*.swp
+__pycache__
+results.xml
+sim_build
+waveforms.vcd
+log
