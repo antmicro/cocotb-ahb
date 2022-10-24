@@ -1,5 +1,5 @@
 # cocotb-AHB
-Copyright (c) 2022 Antmicro
+Copyright (c) 2022 [Antmicro](https://antmicro.com)
 
 Cocotb extension with an AHB bus functional model.
 
