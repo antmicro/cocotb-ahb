@@ -1,16 +1,18 @@
 import pathlib
-from typing import List, Any, Dict
+from typing import Any, Dict
 
-from setuptools import setup, find_packages # type: ignore
+from setuptools import setup, find_packages  # type: ignore
+
 
 def get_version(version_file: pathlib.Path) -> str:
     locls: Dict[Any, str] = {}
     exec(open(version_file).read(), {}, locls)
     return locls["__version__"]
 
+
 root = pathlib.Path(__file__).parent.resolve()
-readme_file = root/"README.md"
-version_file = root/"src"/"cocotb_AHB"/"_version.py"
+readme_file = root / "README.md"
+version_file = root / "src" / "cocotb_AHB" / "_version.py"
 
 if __name__ == "__main__":
     setup(
