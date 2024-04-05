@@ -24,9 +24,9 @@ if __name__ == "__main__":
         packages=find_packages("src"),
         package_dir={"": "src"},
         install_requires=[
-            "cocotb>=1.5.0.dev,<1.7",
+            "cocotb>=1.7",
             "cocotb-bus>=0.2.1",
             "numpy"
         ],
-        python_requires='>=3.5'
+        python_requires='>=3.10'
     )
