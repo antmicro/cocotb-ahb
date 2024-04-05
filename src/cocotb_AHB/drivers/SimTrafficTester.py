@@ -290,12 +290,12 @@ class SimTrafficTester(SimulationInterface):
         for manager in self.managers:
             manager.register_clock(self.clock)
             manager.register_reset(self.reset, self.inverted)
-            cocotb.fork(manager.start())
+            await cocotb.start(manager.start())
 
         for subordinate in self.subordinates:
             subordinate.register_clock(self.clock)
             subordinate.register_reset(self.reset, self.inverted)
-            cocotb.fork(subordinate.start())
+            await cocotb.start(subordinate.start())
 
         _loop = True
         while _loop:
