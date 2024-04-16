@@ -262,8 +262,6 @@ class SimSimpleManager(SimulationInterface, ManagerInterface, MonitorableInterfa
 
     def get_rsp(self, base_address: int, bus_byte_width: int) -> List[int]:
         ret: List[int] = []
-        if self.commands[0][0].hWrite == HWRITE.Read:
-            return ret
         addr = base_address
         for command, resp in zip(self.commands, self.responses):
             _offset = addr % bus_byte_width
