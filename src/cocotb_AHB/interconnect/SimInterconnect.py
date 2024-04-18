@@ -164,7 +164,7 @@ class SimInterconnect(InterconnectInterface, SimulationInterface):
 
     def prep_default(self) -> None:
         for _, subordinate in self.manager_default_subordinate.items():
-            cocotb.fork(subordinate.register_clock(self.clock).register_reset(self.reset, self.inverted).start())
+            cocotb.start_soon(subordinate.register_clock(self.clock).register_reset(self.reset, self.inverted).start())
             self.subordinates_waiting.add(subordinate)
             subordinate.set_ready(HREADY.WaitState)
             self.arbiters[subordinate] = SimInterconnect.Arbiter()

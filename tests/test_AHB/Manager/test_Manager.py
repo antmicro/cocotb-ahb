@@ -20,7 +20,7 @@ from cocotb_AHB.monitors.AHBPacketMonitor import AHBPacketMonitor
 CLK_PERIOD = (10, "ns")
 
 async def setup_dut(dut: SimHandle) -> None:
-    cocotb.fork(Clock(dut.clk, *CLK_PERIOD).start())
+    await cocotb.start(Clock(dut.clk, *CLK_PERIOD).start())
     dut.rstn.value = 0
     await ClockCycles(dut.clk, 10)
     await RisingEdge(dut.clk)
@@ -56,18 +56,18 @@ async def _test(dut: SimHandle, address_width: int, bus_width: int,
     manager.register_clock(dut.clk)
     manager.register_reset(dut.rstn, True)
     manager.set_ready(HREADY.Working)
-    cocotb.fork(manager.start())
+    await cocotb.start(manager.start())
 
     if Monitor is not None:
         monitor = Monitor()
         monitor.register_device(manager)
         monitor.register_clock(dut.clk)
         monitor.register_reset(dut.rstn, True)
-        cocotb.fork(monitor.start())
+        await cocotb.start(monitor.start())
 
     random_gen = default_rng()
 
-    cocotb.fork(setup_dut(dut))
+    await cocotb.start(setup_dut(dut))
     await reset_AHB(dut, [manager])
     risingedge = RisingEdge(dut.clk)
     command: MCMD

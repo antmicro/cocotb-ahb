@@ -17,7 +17,7 @@ from cocotb_AHB.monitors.AHBPacketMonitor import AHBPacketMonitor
 CLK_PERIOD = (10, "ns")
 
 async def setup_dut(dut: SimHandle) -> None:
-    cocotb.fork(Clock(dut.clk, *CLK_PERIOD).start())
+    await cocotb.start(Clock(dut.clk, *CLK_PERIOD).start())
     dut.rstn.value = 0
     await ClockCycles(dut.clk, 10)
     await RisingEdge(dut.clk)
@@ -58,8 +58,8 @@ async def _test_incorrect(dut: SimHandle, length: int, bus_width: int, sel: HSEL
                                       burst=burst,exclusive_transfers=exclusive_transfers)
     subordinate.register_clock(dut.clk)
     subordinate.register_reset(dut.rstn, True)
-    cocotb.fork(setup_dut(dut))
-    sub_task = cocotb.fork(subordinate.start())
+    await cocotb.start(setup_dut(dut))
+    sub_task = await cocotb.start(subordinate.start())
 
     await reset_AHB(dut, [subordinate])
     risingedge = RisingEdge(dut.clk)
@@ -154,8 +154,8 @@ async def _test(dut: SimHandle, length: int, bus_width: int, sel: HSEL,
     subordinate.register_clock(dut.clk)
     subordinate.register_reset(dut.rstn, True)
 
-    cocotb.fork(setup_dut(dut))
-    sub_task = cocotb.fork(subordinate.start())
+    await cocotb.start(setup_dut(dut))
+    sub_task = await cocotb.start(subordinate.start())
 
     await reset_AHB(dut, [subordinate])
     risingedge = RisingEdge(dut.clk)

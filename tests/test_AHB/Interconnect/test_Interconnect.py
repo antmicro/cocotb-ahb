@@ -25,7 +25,7 @@ from cocotb_AHB.drivers.SimTrafficTester import SimTrafficTester
 CLK_PERIOD = (10, "ns")
 
 async def setup_dut(dut: SimHandle) -> None:
-    cocotb.fork(Clock(dut.clk, *CLK_PERIOD).start())
+    await cocotb.start(Clock(dut.clk, *CLK_PERIOD).start())
     dut.rstn.value = 0
     await ClockCycles(dut.clk, 10)
     await RisingEdge(dut.clk)
@@ -53,9 +53,9 @@ async def _test(dut: SimHandle, managers: List[ManagerInterface],
     interconnect_wrapper.register_reset(dut.rstn, True)
     interconnect_wrapper.register_interconnect(interconnect)
 
-    cocotb.fork(interconnect_wrapper.start())
+    await cocotb.start(interconnect_wrapper.start())
 
-    cocotb.fork(setup_dut(dut))
+    await cocotb.start(setup_dut(dut))
     try:
         await Combine(*managers_proc)
     except Exception:
@@ -164,17 +164,17 @@ async def test_simple(dut: SimHandle) -> None:
     subD = SimDefaultSubordinate(0x4000, 32)
     subD.register_clock(dut.clk)
     subD.register_reset(dut.rstn, True)
-    cocotb.fork(subD.start())
+    await cocotb.start(subD.start())
 
     sub0 = SimMem1PSubordinate(0x4000, 32)
     sub0.register_clock(dut.clk)
     sub0.register_reset(dut.rstn, True)
-    cocotb.fork(sub0.start())
+    await cocotb.start(sub0.start())
 
     sub1 = SimMem1PSubordinate(0x4000, 32, exclusive_transfers=True)
     sub1.register_clock(dut.clk)
     sub1.register_reset(dut.rstn, True)
-    cocotb.fork(sub1.start())
+    await cocotb.start(sub1.start())
 
     manager = SimCmdExecAndCheck([
                         (MCMD(hAddr=0x4004, hSize=HSIZE.Word, hWrite=HWRITE.Write, hTrans=HTRANS.NonSeq), MDATA(0x87654321)),
@@ -197,7 +197,7 @@ async def test_simple(dut: SimHandle) -> None:
     manager.register_clock(dut.clk)
     manager.register_reset(dut.rstn, True)
 
-    await _test(dut, [manager], [Join(cocotb.fork(manager.start()))],
+    await _test(dut, [manager], [Join(await cocotb.start(manager.start()))],
                 [subD, sub0, sub1],
                 [(manager, subD, 0, 0x4000),
                  (manager, sub0, 0x4000, 0x4000),
@@ -209,12 +209,12 @@ async def test_default_subordinate(dut: SimHandle) -> None:
     sub0 = SimMem1PSubordinate(0x4000, 32)
     sub0.register_clock(dut.clk)
     sub0.register_reset(dut.rstn, True)
-    cocotb.fork(sub0.start())
+    await cocotb.start(sub0.start())
 
     sub1 = SimMem1PSubordinate(0x4000, 32, exclusive_transfers=True)
     sub1.register_clock(dut.clk)
     sub1.register_reset(dut.rstn, True)
-    cocotb.fork(sub1.start())
+    await cocotb.start(sub1.start())
 
     manager = SimCmdExecAndCheck([
                         (MCMD(hAddr=0x4004, hSize=HSIZE.Word, hWrite=HWRITE.Write, hTrans=HTRANS.NonSeq), MDATA(0x87654321)),
@@ -250,7 +250,7 @@ async def test_default_subordinate(dut: SimHandle) -> None:
     manager.register_clock(dut.clk)
     manager.register_reset(dut.rstn, True)
 
-    await _test(dut, [manager], [Join(cocotb.fork(manager.start()))],
+    await _test(dut, [manager], [Join(await cocotb.start(manager.start()))],
                 [sub0, sub1],
                 [(manager, sub0, 0x4000, 0x4000),
                  (manager, sub1, 0x8000, 0x4000)])
@@ -275,10 +275,10 @@ async def test_factory(dut: SimHandle, num_managers: int, num_subordinates: int,
     interconnect_wrapper.register_reset(dut.rstn, True)
     interconnect_wrapper.register_interconnect(interconnect)
 
-    cocotb.fork(interconnect_wrapper.start())
+    await cocotb.start(interconnect_wrapper.start())
 
-    cocotb.fork(setup_dut(dut))
-    runner = Join(cocotb.fork(trafic_gen.start()))
+    await cocotb.start(setup_dut(dut))
+    runner = Join(await cocotb.start(trafic_gen.start()))
     try:
         await runner
     except Exception:
