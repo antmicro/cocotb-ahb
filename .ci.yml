@@ -1,0 +1,3 @@
+include:
+  - project: cocotb-ahb-ci-scripts
+    file: cocotb-ahb.yaml
