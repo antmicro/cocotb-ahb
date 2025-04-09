@@ -1,3 +1,17 @@
+[project]
+name = "cocotb-AHB"
+description = "AHB cocotb drivers"
+authors = [{name = "Antmicro"}]
+license = "Apache-2.0"
+version = "0.2.0"
+readme = "README.md"
+dependencies = [
+    "cocotb>=1.7",
+    "cocotb-bus>=0.2.1",
+    "numpy",
+]
+requires-python = ">= 3.10"
+
 [build-system]
-requires = ["setuptools < 69", "wheel"]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"

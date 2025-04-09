@@ -12,14 +12,14 @@ on:
   workflow_call:
 
 jobs:
-  regresion-tests:
-    name: Regresion Tests
+  regression-tests:
+    name: Regression Tests
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v4
       with:
         python-version: "3.10"
     - name: Install cocotb and Icarus requirements
