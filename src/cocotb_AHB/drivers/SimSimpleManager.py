@@ -145,7 +145,7 @@ class SimSimpleManager(SimulationInterface, ManagerInterface, MonitorableInterfa
         while address+self.bus_byte_width <= end_address:
             _size = (self.bus_byte_width).bit_length() - 1
             cmds.append((
-                    MCMD(hAddr=address, hSize=HSIZE(i), hTrans=HTRANS.NonSeq, hWrite=HWRITE.Read),
+                    MCMD(hAddr=address, hSize=HSIZE(_size), hTrans=HTRANS.NonSeq, hWrite=HWRITE.Read),
                     MDATA(0)
                 )
             )
